@@ -1,0 +1,6 @@
+.idea
+*.tmp
+docs
+*.exe
+cmake*
+src/*_conv.s
