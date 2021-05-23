@@ -1,0 +1,9 @@
+test1 - a is nonzero
+test3 - a is zero
+test4 - else called
+test5 - a | b
+test7 - a | b
+test8 - ok
+test9 - ok
+test10 - ok
+test11 - ok

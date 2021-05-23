@@ -8,17 +8,17 @@
  * lbl - where to jump
  * cond - decides whether to jump when condition is true or false
  */
-jumpc(tree, lbl, cond)
+void jumpc(tree, lbl, cond)
 int tree[];
 {
-	rcexpr(block(1,easystmt()+103,tree,lbl,cond),cctab);
+	rcexpr(block(1,103,tree,lbl,cond),cctab);
 }
 
 /*
  * Prints the binary representation of the tree.
  * table - the expression translation table used in the next pass.
  */
-rcexpr(tree, table)
+void rcexpr(tree, table)
 int tree[], table;  // table: the code generation table
 {
 	int c, *sp;
@@ -39,21 +39,21 @@ int tree[], table;  // table: the code generation table
 #endif
 }
 
-jump(lab) {
+void jump(lab) {
 	printf("jmp\tl%d\n", lab);
 }
 
-label(l) {
+void label(l) {
 	printf("l%d:", l);
 }
 
 /* Generates code for a return statement. */
-retseq() {
+void retseq() {
     printf("leave\nret\n");
 }
 
 /* Label for a static variable */
-slabel() {
+void slabel() {
 	printf(".data; l%d: 1f; .text; 1:\n", csym[2]);
 }
 

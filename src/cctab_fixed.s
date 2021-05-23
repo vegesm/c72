@@ -3,22 +3,11 @@
 .globl	_cctab
 
 _cctab=.;.int .+4
-	.int 20, rest
-	.int 21, rest
-	.int 22, rest
 	.int 30, rest
 	.int 31, rest
-	.int 34, rest
-	.int 35, rest
-	.int 36, rest
 	.int 37, rest
 	.int 40, rest
 	.int 41, rest
-	.int 42, rest
-	.int 43, rest
-	.int 44, rest
-	.int 45, rest
-	.int 46, rest
 	.int 47, rest
 	.int 48, rest
 	.int 60, cc60
@@ -33,81 +22,54 @@ _cctab=.;.int .+4
 	.int 69, cc60
 	.int 70, rest
 	.int 71, rest
-	.int 72, rest
-	.int 73, rest
-	.int 74, rest
-	.int 75, rest
-	.int 76, rest
 	.int 77, rest
 	.int 78, rest
 	.int 79, rest
-	.int 80, rest
 
 /* relationals */
 cc60:
-%a,z
-	tstB1	A1
-
-%n*,z
-	F*
-	tstB1	#1(R)
-
-%n,z
+/* this prevents using %aw,cw template, because x86 allows a single immediate only */
+%c,c
 	F
-	tst	R
+	cmp	A2,R
 
-%a,a
-	cmpBE	A1,A2
+%aw,cw
+	cmpl	A2,A1
 
-%n*,a
+%aw,a
+	S
+	cmp	R,A1
+
+%nw*,aw
 	F*
-	cmpBE	#1(R),A2
+	cmpl	A2,#1(R)
 
-%n,a
+%n,aw
 	F
-	cmpB2	R,A2
+	cmp	A2,R
 
-%n*,e*
-	F*
-	S1*
-	cmpBE	#1(R),#2(R1)
-
-%n*,e
+%nw*,e
 	F*
 	S1
-	cmpB1	#1(R),R1
+	cmp	R1,#1(R)
 
-%n,e*
+%n,ew*
 	F
 	S1*
-	cmpB2	R,#2(R1)
+	cmp	#2(R1),R
 
 %n,e
 	F
 	S1
-	cmp	R,R1
-
-%n*,n*
-	FS*
-	S*
-	cmpBE	(sp)+,#2(R)
-
-%n*,n
-	FS*
-	S
-	cmpB1	*(sp)+,R
-
-%n,n*
-	FS
-	S*
-	cmpB2	(sp)+,#2(R)
+	cmp	R1,R
 
 %n,n
 	FS
 	S
-	cmp	(sp)+,R
+	pop %edi
+	cmp	R,%edi
 
-/* set codes right - put here those instructions that end with add/or/sub/etc (no mov). Those set the flags correctly */
+/* these opcodes set the flags correctly, no need to call an extra test */
 rest:
 %n,n
 	H

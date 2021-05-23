@@ -93,7 +93,7 @@ goon:
 			cvn += (dope&010)!=0? 83:93;  /* assignment? */
 			if (lr) {  /*  right argument needs to be converted */
 				t2 = t;
-				 d2 = (p2=convert(p2, t, d2, cvn))[2];
+				 d2 = (p2=convert(p2, t, d2, cvn))[2];  /* this also emits the conversion operation */
 			} else {
 				t1 = t;
 				d1 = (p1=convert(p1, t, d1, cvn))[2];

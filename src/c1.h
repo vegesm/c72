@@ -24,21 +24,20 @@ int collcon(int*);
 isfloat(int *, char *s[]);
 
 /* c11.c */
-void jumpc(int[],int,int);
 void cbranch(int[], int, int, int);
-branch(int,int,int);
-jump(int);
-label(int);
+void branch(int,int,int);
+void jump(int);
+void label(int);
 void popstk(int);
 int length(int);
 int rlength(int);
-getwrd();
+int getwrd();
 void printn(int,int);
 void cc_printf(char*,...);
 void cc_putchar(int);
-error(char[]);
-error1(char[],int);
-error2(char[],int,int);
+void error(char[]);
+void error1(char[],int);
+void error2(char[],int,int);
 
 int *fixp(int*);
 

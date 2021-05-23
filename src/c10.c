@@ -151,15 +151,14 @@ int tree[], table[]; {
 	tree = fixp(tree);
 
 	if(*tree >= 103) {  /* conditional jump */
-	    if(*tree==103)
-	        jumpc(tree[1],tree[2],tree[3]);
-	    else
-	        cbranch(tree[1],tree[2],tree[3],0);
-
+	    cbranch(tree[1],tree[2],tree[3],0);
 		return;
 	}
-//	if (cexpr(origtree, table, reg))
-//		return;
+	if(table == cctab || table==regtab) {  // temporarily only these two tables are enabled
+	    if (cexpr(origtree, table, reg))
+		    return;
+	}
+
 	if (table!=regtab) {
         if (cexpr(origtree, regtab, reg)) {
             if (table == sptab) {
@@ -176,10 +175,7 @@ int tree[], table[]; {
             }
             return;
         }
-    } else {
-	    if (cexpr(origtree, table, reg))
-		    return;
-	}
+    }
 	error1("No match for op %d", *tree);
 }
 

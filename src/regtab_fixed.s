@@ -239,11 +239,8 @@ cr48:
 cr60:
 %n,n
 	HC
-	I	2f
-	clr	R
-	br	1f
-2:	mov	$1,R
-1:
+	setI	%dl
+	movzbl	%dl, R
 
 /* >>, << */
 cr45:

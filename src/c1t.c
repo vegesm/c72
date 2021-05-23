@@ -62,16 +62,16 @@ char *instabstr[]= {
 	"or", NULL,  // |
 	"or", NULL,  // =|
 
-    "beq", "bne", // 0:beq, 1:bne
-	"bne", "beq",
-	"ble", "bgt", // 2:ble, 5: bgt
-	"blt", "bge", // 3:blt, 4:bge
-	"bge", "blt",
-	"bgt", "ble",
-	"blos", "bhi", //6:blos, 9:bhi
-	"blo", "bhis", // 7:blo 8:bhis
-	"bhis", "blo",
-	"bhi", "blos"
+    "e", "ne",  // ==
+	"ne", "e",  // !=
+	"le", "g",  // <=
+	"l", "ge",  // <
+	"ge", "l",  // >=
+	"g", "le",  // >
+	"be", "a",  // <p, unsigned comparison
+	"b", "ae",  // <=p
+	"ae", "b",  // >p
+	"a", "be"   // >=p
 };
 
 int opdope[] = {

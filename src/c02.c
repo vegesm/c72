@@ -149,7 +149,7 @@ stmt:
 			statement(0);
 			if ((o=symbol())==19 & cval==14) {  /* else */
 				o2 = isn++;
-				(easystmt()?branch:jump)(o2);  /* branch can only jump to a close location */
+				jump(o2);
 				label(o1);
 				statement(0);
 				label(o2);
@@ -167,7 +167,7 @@ stmt:
 			jumpc(pexpr(), brklab=isn++, 0);
 			o3 = easystmt();
 			statement(0);
-			(o3?branch:jump)(contlab);
+			jump(contlab);
 			label(brklab);
 			contlab = o1;
 			brklab = o2;
@@ -448,9 +448,4 @@ easystmt()
 	return(peeksym!=2);		/* { */
 }
 
-/* Emits a branch instruction */
-branch(lab)
-{
-	printf("jmp	L%d\n", lab);
-}
 

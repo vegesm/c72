@@ -38,15 +38,15 @@ blkend();
 errflush(int);
 void declist();
 easystmt();
-branch(int);
+//branch(int);
 
 /* c03.c */
-jumpc(int[], int, int);
-rcexpr(int[], int);
-jump(int);
-label(int);
-retseq();
-slabel();
+void jumpc(int[], int, int);
+void rcexpr(int[], int);
+void jump(int);
+void label(int);
+void retseq();
+void slabel();
 void setstk(int);
 defvec();
 defstat(int[]);

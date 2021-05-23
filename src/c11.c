@@ -1,67 +1,6 @@
 #include "c1.h"
 
 /*
- * Tree is a n unfixed pointer to the conditional expression.
- * lbl - label to jump to
- * cond - 0: jump if condition is false, 1: jump if condition is true
- */
-void jumpc(tree, lbl, cond)
-int tree[]; {
-	int l1, l2, *origtree;
-
-	if (tree==0)
-		return;
-
-    origtree=tree;
-	tree=fixp(tree);
-
-	switch(*tree) {
-
-	/* & */
-	case 47:
-		if (cond) {
-			cbranch(tree[3], l1=isn++, 0, 0);
-			cbranch(tree[4], l1, 0, 0);
-			jump(lbl);
-			label(l1);
-		} else {
-			cbranch(tree[3], l1=isn++, 0, 0);
-			cbranch(tree[4], l2=isn++, 1, 0);
-			label(l1);
-			jump(lbl);
-			label(l2);
-		}
-		return;
-
-	/* | */
-	case 48:
-		if (cond) {
-			cbranch(tree[3], l1=isn++, 1, 0);
-			cbranch(tree[4], l2=isn++, 0, 0);
-			label(l1);
-			jump(lbl);
-			label(l2);
-		} else {
-			cbranch(tree[3], l1=isn++, 1, 0);
-			cbranch(tree[4], l1, 1, 0);
-			jump(lbl);
-			label(l1);
-		}
-		return;
-
-	/* ! */
-	case 34:
-		jumpc(tree[3], lbl, !cond);
-		return;
-	}
-	rcexpr(origtree, cctab, 0);
-	branch(l1=isn++, *tree, cond);
-	jump(lbl);
-	label(l1);
-	return;
-}
-
-/*
  * Tree is an unfixed pointer to the conditional expression.
  * lbl - label to jump to
  * cond - 0: jump if condition is false, 1: jump if condition is true
@@ -108,25 +47,26 @@ int tree[]; {
 	}
 	rcexpr(origtree, cctab, reg);
 	branch(lbl, *tree, !cond);
-	return;
 }
 
 
-branch(lbl, op, c) {
+void branch(lbl, op, c) {
 	if(op) {
 		if((opdope[op]&04)==0)  /* conditional jump? */
 			op = 61;
+
+		printf("j");  /* instruction code of conditional jumps is the condition mnemonic */
 		prins(op,c);
 	} else
-		printf("br");
+		printf("jmp");
 	printf("\tl%d\n", lbl);
 }
 
-jump(lab) {
+void jump(lab) {
 	printf("jmp\tl%d\n", lab);
 }
 
-label(l) {
+void label(l) {
 	printf("l%d:", l);
 }
 
@@ -273,18 +213,18 @@ loop:
 	goto loop;
 }
 
-error(s)
+void error(s)
 char s[];{
     error2(s, 0, 0);
 }
 
-error1(s, p1)
+void error1(s, p1)
 char s[];{
     error2(s, p1, 0);
 }
 
 
-error2(s, p1, p2)
+void error2(s, p1, p2)
 char s[];{
 	FILE *f;
 
