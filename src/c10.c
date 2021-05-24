@@ -154,7 +154,7 @@ int tree[], table[]; {
 	    cbranch(tree[1],tree[2],tree[3],0);
 		return;
 	}
-	if(table == cctab || table==regtab) {  // temporarily only these two tables are enabled
+	if(table == cctab || table==regtab || table==efftab) {  // temporarily only these two tables are enabled
 	    if (cexpr(origtree, table, reg))
 		    return;
 	}
@@ -280,6 +280,8 @@ loop:
 	pbyte:
 		if (p[1]==1)	/* char type? */
 			putchar('b');
+		else
+		    putchar('l');
 pb1:
 		if (isfloat(p, 0))
 			putchar('f');
@@ -289,6 +291,8 @@ pb1:
 	case 'L':
 		if (fixp(tree[3])[1]==1 | fixp(tree[4])[1]==1)
 			putchar('b');
+		else
+		    putchar('l');
 		goto loop;
 
 	/* C1 */

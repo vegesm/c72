@@ -1,0 +1,8 @@
+test1: 5
+test2: 4
+test3: 16
+test4: -127
+test5: 8 11 128
+test6: 8
+test7: 4 10
+test8: -128
