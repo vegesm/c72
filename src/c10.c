@@ -154,10 +154,9 @@ int tree[], table[]; {
 	    cbranch(tree[1],tree[2],tree[3],0);
 		return;
 	}
-	if(table == cctab || table==regtab || table==efftab) {  // temporarily only these two tables are enabled
-	    if (cexpr(origtree, table, reg))
-		    return;
-	}
+
+    if (cexpr(origtree, table, reg))
+        return;
 
 	if (table!=regtab) {
         if (cexpr(origtree, regtab, reg)) {

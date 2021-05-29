@@ -1,6 +1,17 @@
-main() {
+destr() {
+    3/3; /* destroys %edi */
+    return (2);
+}
+
+piarr () {
     extern iarr;
-    int iarr[];
+    3/3; /* destroys %edi */
+    return (iarr);
+}
+
+main() {
+    extern iarr, destr, piarr;
+    int iarr[], piarr[];
     int a,b;
     char c, d, carr[4];
 
@@ -71,6 +82,10 @@ main() {
     a = 6;
     printf("4-(a=/2) = %d\n", 4-(a=/2));
     printf("a = %d\n", a);
+
+    iarr[0] = 6;
+    (*piarr())=/destr();
+    printf("6/2 = %d\n", iarr[0]);
 }
 
 iarr[] 1, 8, 10, 128;

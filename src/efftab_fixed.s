@@ -93,7 +93,6 @@ cr70:
 	F*
 	pop	%edi
 	I	%edi,#1(R)
-	mov	#1(R),R
 
 %n*,n
 	SS

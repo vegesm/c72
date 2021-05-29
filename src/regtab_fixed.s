@@ -344,11 +344,11 @@ cr43:
 
 %n,c
 %n,ab
-	c72_mov B2, A2, %edi
 	?0push	%eax
 	F
 	?0mov	R, %eax
 	cdq
+	c72_mov B2, A2, %edi
 	idiv	%edi
 	mov	I,R
 	?0pop	%eax
@@ -363,12 +363,12 @@ cr43:
 	?0pop	%eax
 
 %n,n
-	S
-	mov	R, %edi
-	?0push	%eax
+    ?0push	%eax
+	SS
 	F
 	?0mov	R, %eax
 	cdq
+	pop %edi
 	idiv	%edi
 	mov	I,R
 	?0pop	%eax
@@ -450,12 +450,12 @@ cr73:
 
 %n*,c
 %n*,ab
-	c72_mov B2, A2, %edi
 	?0push	%eax
 	F*
 	mov	R, %esi
 	c72_mov	B1,#1(%esi), %eax
 	cdq
+	c72_mov B2, A2, %edi
 	idiv	%edi
 	c72_mov	B1,I,#1(%esi)
 	c72_mov	B1,I,R
@@ -473,13 +473,13 @@ cr73:
 	?0pop	%eax
 
 %n*,n
-	S
-	mov	R, %edi
 	?0push	%eax
+	SS
 	F*
 	mov	R, %esi
 	c72_mov	B1,#1(%esi), %eax
 	cdq
+	pop %edi
 	idiv	%edi
 	c72_mov	B1,I,#1(%esi)
 	c72_mov	B1,I,R
@@ -514,13 +514,13 @@ cr75:
 
 %n*,n
 	?2push	%cl
-	F*
-	mov	R, %edi
+	FS*
 	S
 	c72_mov	b, R, %cl
-	c72_mov	B1, #1(%edi), R
+	pop %edi
+	c72_mov	B1, (%edi), R
 	I	%cl, R
-	c72_mov	B1, R, #1(%edi)
+	c72_mov	B1, R, (%edi)
 	c72_mov	B1, R, R
 	?2pop	%cl
 
