@@ -113,7 +113,7 @@ stmt:
 	/* { */
 	case 2: {
 		if(d)
-			blkhed();  /* process definitions at the start of the funciton */
+			blkhed();  /* process definitions at the start of the function */
 		/* recursively process this block of code */
 		while (!eof) {
 			if ((o=symbol())==3)	/* } */
@@ -304,13 +304,13 @@ syntax:
 
 /* Parses the contents of a switch block. */
 pswitch() {
-	int *sswp, dl, cv, swlab;  /* ?, default label, current ?, switch label */
+	int *sswp, dl, cv, swlab;  /* holder for the previous switch table, label of previous default label, iterator, switch table label */
 
 	sswp = swp;  /* save swp */
 	if (swp==0)
 		swp = swtab;
 	swlab = isn++;
-	printf("jsr	pc,bswitch; l%d\n", swlab);
+	printf("mov\t$l%d, %ebx\njmp	bswitch\n", swlab);
 	dl = deflab;  /* save deflab */
 	deflab = 0;
 	statement(0);
@@ -319,12 +319,12 @@ pswitch() {
 		label(deflab);
 	}
 	/* generate switch table */
-	printf("L%d:.data;L%d:", brklab, swlab);
+	printf("l%d:.data;l%d:", brklab, swlab);
 	while(swp>sswp & swp>swtab) {
 		cv = *--swp;
-		printf("%o; l%d\n", cv, *--swp);
+		printf(".int %d, l%d\n", cv, *--swp);  /* prints condition, label to code */
 	}
-	printf("L%d; 0\n.text\n", deflab);
+	printf(".int l%d, 0\n.text\n", deflab);
 	deflab = dl;
 	swp = sswp;
 }

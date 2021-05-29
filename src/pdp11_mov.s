@@ -64,3 +64,18 @@ __prinst movb, \from, \to
 
 .endif
 .endm
+
+/* eax contains the value we want to switch on, ebx has the switch table address */
+1:
+	addl $8, %ebx
+bswitch:
+2:	cmp	(%ebx),%eax     /* if first column matches, check second col */
+	je	1f
+	testl	$-1, 4(%ebx)
+	jnz	1b
+2:
+	jmp	*(%ebx)
+1:
+	testl	$-1, 4(%ebx)
+	jz 2b
+	jmp	*4(%ebx)

@@ -1,0 +1,6 @@
+test1 - 0
+test1 - 1
+test1 - default
+test2 - 1
+test3 - default
+end of program
