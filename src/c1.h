@@ -1,7 +1,3 @@
-//
-// Created by veges on 2021. 03. 17..
-//
-
 #ifndef LEGACY_CC_C1_H
 #define LEGACY_CC_C1_H
 
@@ -10,18 +6,17 @@
 #include "config.h"
 
 /* c10.c */
-generate();
 char *match(int*, int*, int);
 void rcexpr(int*, int*, int);
-cexpr(int*, int*, int);
+int cexpr(int*, int*, int);
 void pname(int *);
-dcalc(int *, int);
-notcompat(int,int );
+int dcalc(int *, int);
+int notcompat(int,int );
 void prins(int, int);
 void printreg(int);
 void printlreg(int);
 int collcon(int*);
-isfloat(int *, char *s[]);
+int isfloat(int *, char *s[]);
 
 /* c11.c */
 void cbranch(int[], int, int, int);
@@ -50,14 +45,14 @@ extern int *sptab;
 extern int opdope[];
 extern int ospace[];
 extern int *baseptr;
-extern nreg;
-extern isn;
-extern namsiz;
+extern const int nreg;
+extern int isn;
+extern const int namsiz;
 extern FILE* fout;
-extern line;
-extern tmpfil;
-extern nerror;
-extern fltmod;
+extern int line;
+extern int tmpfil;
+extern int nerror;
+extern int fltmod;
 
 extern int instabcode[];
 extern char *instabstr[];

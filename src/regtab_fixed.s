@@ -63,7 +63,7 @@ cr102:
 
 %n,n
 	F
-	jmp	(R)
+	jmp	*R
 
 /* call */
 cr100:

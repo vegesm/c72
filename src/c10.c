@@ -8,7 +8,7 @@
 #include "c1.h"
 #include <stdlib.h>
 
-ospace[1000];	/* fake */
+int ospace[1000];	/* fake */
 
 /*
  * Second pass of the compiler. The code was expected to be loaded at the same location as the first pass,
@@ -27,8 +27,7 @@ ospace[1000];	/* fake */
  * e - 20 - easy statement, value can be calculated using the available registers only
  * n - 63 - anything
  */
-void main(argc, argv)
-char *argv[];
+int main(int argc, char *argv[])
 {
 	int *sp, c, *table, *tabtab[4], tree;
 
@@ -72,8 +71,8 @@ char *argv[];
  * tree is an unfixed pointer
  * nreg - number of available registers
  */
-char *match(tree, table, nreg)
-int tree[], table[]; {
+char *match(int *tree, int *table, int nreg)
+{
 	int op, d1, d2, t1, t2, *p1, *p2;
 	char *mp;
 
@@ -140,8 +139,8 @@ notyet:
  *       Additionally, the code generator should leave lower numbered registers alone,
  *       and only use reg or higher numbered registers.
  */
-void rcexpr(tree, table, reg)
-int tree[], table[]; {
+void rcexpr(int *tree, int *table, int reg)
+{
     int *origtree;
 
 	if(tree==0)
@@ -187,8 +186,7 @@ int tree[], table[]; {
  *       Additionally, the code generator should leave lower numbered registers alone,
  *       and only use reg or higher numbered registers.
  */
-int cexpr(tree, table, reg)
-int tree[], table[]; {
+int cexpr(int *tree, int *table, int reg) {
 	int *p1, *fp1, *p2, *fp2, c, r, *p, *otable, *ctable, *origtree;
 	char *string;
 
@@ -398,10 +396,7 @@ pb1:
 }
 
 /* Prints the value/label/location of a tree node. p is a fixed pointer */
-void pname(p)
-int *p; {
-	char *np;
-	int i;
+void pname(int *p) {
 
 loop:
 	switch(*p) {
@@ -448,8 +443,7 @@ loop:
  * p points to a fixed optable entry.
  * nreg - number of free registers.
  */
-int dcalc(p, nreg)
-int p[]; {
+int dcalc(int *p, int nreg) {
 	int op, t;
 
 	if (p==0)
@@ -483,7 +477,7 @@ def:
  * at - type in the tree
  * st - type in the code template table
  * */
-int notcompat(at, st) {
+int notcompat(int at, int st) {
 
 	if (st==0)		/* word, byte */
 		return(at>1 & at<16);  /* can store char or int only */
@@ -499,7 +493,7 @@ int notcompat(at, st) {
  * Prints the instruction belonging to this opcode. c decides whether
  * the first or the second subinstruction should be printed.
  */
-void prins(op, c) {
+void prins(int op, int c) {
 	int *insp;
 	char **insstrp;
 	char *s;
@@ -522,7 +516,7 @@ err:
 }
 
 /* Prints register n */
-void printreg(n) {
+void printreg(int n) {
     if(n>=4) {
         error1("Too large register id: %d", n);
     }
@@ -534,20 +528,16 @@ void printreg(n) {
 
 
 /* True if p is in 'x+const' form */
-int collcon(p)
-int p[]; {
-	int *p1;
+int collcon(int *p) {
 
 	if(*p==40 | *p==41)
-		if(*(p1=fixp(p[4]))==21)
+		if(*fixp(p[4])==21)
 			return(1);
 	return(0);
 }
 
-/* tree - correct pointer into ospace */
-isfloat(t, s)
-int t[];
-char *s[];
+/* t - fixed pointer into ospace */
+int isfloat(int *t, char *s[])
 {
 	int rt;
 
@@ -566,12 +556,12 @@ char *s[];
 }
 
 int *baseptr=0;
-nreg = 3;  /* number of available registers */
-isn = 10000;
-namsiz = 8;  /* max length of a name */
+const int nreg = 4;  /* number of available registers */
+int isn = 10000;
+const int namsiz = 8;  /* max length of a name */
 FILE* fout;
-line;
-tmpfil;
-nerror;
-fltmod;
+int line;
+int tmpfil;
+int nerror;
+int fltmod;
 

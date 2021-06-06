@@ -5,8 +5,7 @@
  * lbl - label to jump to
  * cond - 0: jump if condition is false, 1: jump if condition is true
  */
-void cbranch(tree, lbl, cond, reg)
-int tree[]; {
+void cbranch(int *tree, int lbl, int cond, int reg) {
 	int l1, *origtree;
 
 	if (tree==0)
@@ -50,28 +49,28 @@ int tree[]; {
 }
 
 
-void branch(lbl, op, c) {
+void branch(int lbl, int op, int c) {
 	if(op) {
 		if((opdope[op]&04)==0)  /* conditional jump? */
 			op = 61;
 
 		printf("j");  /* instruction code of conditional jumps is the condition mnemonic */
-		prins(op,c);
+		prins(op, c);
 	} else
 		printf("jmp");
 	printf("\tl%d\n", lbl);
 }
 
-void jump(lab) {
+void jump(int lab) {
 	printf("jmp\tl%d\n", lab);
 }
 
-void label(l) {
+void label(int l) {
 	printf("l%d:", l);
 }
 
 /* Decreases the stack size, moving sp the required amounts. */
-void popstk(a) {
+void popstk(int a) {
 
 	switch(a) {
 
@@ -89,12 +88,11 @@ void popstk(a) {
 	printf("add	$%d,%esp\n", a);
 }
 
-int *fixp(p)
-int *p; {
+int *fixp(int *p) {
     return (void*)p-(void*)baseptr+(void*)ospace;
 }
 
-int length(t) {
+int length(int t) {
 
 	if (t<0)
 		t += 020;
@@ -122,7 +120,7 @@ int length(t) {
 }
 
 /* rounded length */
-int rlength(c) {
+int rlength(int c) {
 	int l;
 
 	return((l=length(c))==1? 4: l);
@@ -142,12 +140,12 @@ int getwrd() {
     return i;
 }
 
-void printn(n,b) {
-	auto a;
+void printn(int n, int base) {
+	int a;
 
-	if(a=n/b) /* assignment, not test for equality */
-		printn(a, b); /* recursive */
-	putchar(n%b + '0');
+	if(a= n / base) /* assignment, not test for equality */
+		printn(a, base); /* recursive */
+	putchar(n % base + '0');
 }
 
 void cc_putchar(int c)
@@ -213,21 +211,17 @@ loop:
 	goto loop;
 }
 
-void error(s)
-char s[];{
+void error(char *s) {
     error2(s, 0, 0);
 }
 
-void error1(s, p1)
-char s[];{
+void error1(char *s, int p1) {
     error2(s, p1, 0);
 }
 
 
-void error2(s, p1, p2)
-char s[];{
+void error2(char *s, int p1, int p2) {
 	FILE *f;
-
 	nerror++;
 	fflush(stdout);
 	f = fout;

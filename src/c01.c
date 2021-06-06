@@ -6,9 +6,9 @@
  * Builds a new node of the operator tree and pushes it onto the cmst stack.
  * The necessary parameters are popped from cmst.
  */
-void build(op) {
-	auto *p1, t1, d1, *p2, t2, d2, t;
-	auto d, dope, lr, cvn;
+void build(int op) {
+	int *p1, t1, d1, *p2, t2, d2, t;
+	int d, dope, lr, cvn;
 
     /* replace a[b] with *(a+b) */
 	if (op==4)  {		/* [] */
@@ -99,20 +99,19 @@ goon:
 				d1 = (p1=convert(p1, t, d1, cvn))[2];
 			}
 nocv:;		}
-		// TODO UNDO!!!! - debuging only
-//		if (d2>d1 & (dope&0100)!=0) {	/* flip operands, if second tree is more difficult */
-//			if ((dope&04)!=0)	/* relational? */
-//				op = maprel[op-60];
-//			d = d1;
-//			d1 = d2;
-//			d2 = d;
-//			d = p1;
-//			p1 = p2;
-//			p2 = d;
-//			d = t1;
-//			t1 = t2;
-//			t2 = d;
-//		}
+		if (d2>d1 && (dope&0100)!=0) {	/* flip operands, if second tree is more difficult */
+			if ((dope&04)!=0)	/* relational? */
+				op = maprel[op-60];
+			d = d1;
+			d1 = d2;
+			d2 = d;
+			d = p1;
+			p1 = p2;
+			p2 = d;
+			d = t1;
+			t1 = t2;
+			t2 = d;
+		}
 		if (d1==d2)  /* calculating registers needed for this node using Sethi-Ullman */
 			d = d1+1; else
 			d = max(d1,d2);
@@ -131,10 +130,8 @@ nocv:;		}
  * d - current difficulty
  * cvn - conversion opcode
  */
-int *convert(p, t, d, cvn)
-int p[];
-{
-	auto c;
+int *convert(int *p, int t, int d,  int cvn) {
+	int c;
 	if (*p==21) {		/* constant */
 		c = p[3];  /* the current value of the constant */
 		switch(cvn) {
@@ -154,32 +151,28 @@ int p[];
 }
 
 /* check if p is a word type */
-chkw(p)
-int p[]; {
-	auto t;
+void chkw(int *p)  {
+	int t;
 
-	if ((t=p[1])>1 & t<16)
+	if ((t=p[1])>1 && t<16)
 		error("Integer operand required");
 }
 
-/* Compresses type id to one used in cvtable */
-lintyp(t) {
+/* Index of type in cvtable */
+int lintyp(int t) {
 	return(t<16? t:(t<32? t-12: 8));
 }
 
 
-error(s)
-char s[];{
+void error(char *s) {
     error2(s, 0, 0);
 }
 
-error1(s, p1)
-char s[];{
+void error1(char *s, int p1) {
     error2(s, p1, 0);
 }
 
-error2(s, p1, p2)
-char s[];{
+void error2(char *s, int p1, int p2) {
 	FILE *f;
 
 	nerror++;
@@ -237,14 +230,14 @@ int *block(int n, ...)
 }
 
 /* check if p is an lvalue (name or pointer) */
-chklval(p)
+void chklval(p)
 int p[]; {
 	if (*p!=20)
 		if (*p!=36)
 			error("Lvalue required");
 }
 
-max(a, b)
+int max(a, b)
 {
 	if (a>b)
 		return(a);

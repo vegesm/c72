@@ -4,8 +4,7 @@
  * Parses a function, the function name and the opening parenthesis of the
  * argument list has already been read. name contains the name of the function.
  */
-void function(name)
-char name[]; {
+void function(char *name) {
 	printf( ".text; %p:\n", name);
 
 	printf("push   %ebp; mov    %esp, %ebp\n");  /* set up stack frame */
@@ -18,7 +17,7 @@ char name[]; {
 
 /* Parses the next function/global variable definition. */
 void extdef() {
-	auto o, c, *cs;
+	int o, c, *cs;
 	char *s;
 
 	if(((o=symbol())==0) || o==1)	/* EOF */
@@ -95,7 +94,7 @@ syntax:
  * Parses (a block of) statements.
  * d - true if this is a start of a function block
  */
-void statement(d) {
+void statement(int d) {
 	int o, o1, o2, o3, *np;
 
 stmt:
@@ -286,9 +285,9 @@ syntax:
  * Parses an expression enclosed in parenthesis.
  * Returns the address to the parsed tree.
  */
-pexpr()
+int* pexpr()
 {
-	auto o, t;
+	int o, t;
 
 	if ((o=symbol())!=6)	/* ( */
 		goto syntax;
@@ -303,7 +302,7 @@ syntax:
 }
 
 /* Parses the contents of a switch block. */
-pswitch() {
+void pswitch() {
 	int *sswp, dl, cv, swlab;  /* holder for the previous switch table, label of previous default label, iterator, switch table label */
 
 	sswp = swp;  /* save swp */
@@ -332,9 +331,9 @@ pswitch() {
 /*
  * Function block head: processes variable definitions.
  */
-blkhed()
+void blkhed()
 {
-	int o, al, pl, *cs, hl;
+	int al, pl, *cs, hl;
 
 	declist();
 	stack = al = -4;  /* sizeof(int*), offset of the first automatic local variable from the stack frame */
@@ -360,9 +359,9 @@ blkhed()
 		case 5:
 			if (cs[3]) {	/* array */
 //				al -= (cs[3]*length(cs[1]-020)+1) & 077776;  /* push array on stack, round up to even */
-				al -= (cs[3]*length(cs[1]-020)+1) & (~1);  /* push array on stack */
+				al -= (cs[3]*length(cs[1]-020)+1) & (~1);  /* push array on stack TODO shouldn't this be 4?? */
 				setstk(al);
-				defvec(al);
+				defvec();
 			}
 			cs[2] = al;
 			al -= rlength(cs[1]);
@@ -390,13 +389,13 @@ blkhed()
  * Clears all elements from the symbol table,
  * except keywords.
  */
-blkend() {
-	auto i, hl;
+void blkend() {
+	int i, hl;
 
 	i = 0;
 	hl = hshsiz;
-	while(hl--) {
-		if(hshtab[i+4])
+	while(hl--) {  /* iterate over table backwards */
+		if(hshtab[i+4])  /* if defined */
 			if (hshtab[i]==0)
 				error1("%p undefined", &hshtab[i+4]);
 			if(hshtab[i]!=1) {	/* not keyword */
@@ -408,7 +407,7 @@ blkend() {
 }
 
 /* Throw away symbols until end of statement. */
-errflush(o) {
+void errflush(int o) {
 	while(o>3)	/* ; { } */
 		o = symbol();
 	peeksym  = o;
@@ -420,7 +419,7 @@ errflush(o) {
  */
 void declist()
 {
-	auto o;
+	int o;
 
 	while((o=symbol())==19 & cval<10)  /* cval<10 means it is a type/storage area definition (int/char/extern/static) */
 		declare(cval);
@@ -431,7 +430,7 @@ void declist()
  * Detects whether the next statement is expected to be small - i.e. not a compound statement
 * This usually means it is a single statement or conditional.
 * e.g. goto, break, or not a label or block */
-easystmt()
+int easystmt()
 {
 	if((peeksym=symbol())==20)	/* name */
 		return(peekc!=':');	 /* not label */

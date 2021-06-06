@@ -8,18 +8,16 @@
  * lbl - where to jump
  * cond - decides whether to jump when condition is true or false
  */
-void jumpc(tree, lbl, cond)
-int tree[];
+void jumpc(int *tree, int lbl, int cond)
 {
-	rcexpr(block(1,103,tree,lbl,cond),cctab);
+	rcexpr(block(1,103,tree,lbl,cond), cctab);
 }
 
 /*
  * Prints the binary representation of the tree.
  * table - the expression translation table used in the next pass.
  */
-void rcexpr(tree, table)
-int tree[], table;  // table: the code generation table
+void rcexpr(int *tree, int table)
 {
 	int c, *sp;
 
@@ -39,11 +37,11 @@ int tree[], table;  // table: the code generation table
 #endif
 }
 
-void jump(lab) {
+void jump(int lab) {
 	printf("jmp\tl%d\n", lab);
 }
 
-void label(l) {
+void label(int l) {
 	printf("l%d:", l);
 }
 
@@ -54,15 +52,15 @@ void retseq() {
 
 /* Label for a static variable */
 void slabel() {
-	printf(".data; l%d: 1f; .text; 1:\n", csym[2]);
+	printf(".data; l%d: .int 1f; .text; 1:\n", csym[2]);
 }
 
 /*
  * Reserves space on the stack.
  * a - amount of bytes to add to the stack
  */
-void setstk(a) {
-	auto ts;
+void setstk(int a) {
+	int ts;
 
 	ts = a-stack;  /* relative distance */
 	stack = a;
@@ -83,18 +81,16 @@ void setstk(a) {
 }
 
 /* define array on stack, simply saves the pointer to the top of the stack */
-int defvec() {
-//	printf("mov\tsp,r0\nmov\tr0,-(sp)\n");
+void defvec() {
 	printf("push\t%esp\n");
-	stack -= 4;
+	stack -= 4;  /* word size */
 }
 
 /*
  * Define static variable.
  * s - pointer to symbol table entry
  */
-defstat(s)
-int s[]; {
+void defstat(int *s) {
 	int len;
 
 	len = length(s[1]);
@@ -107,9 +103,9 @@ int s[]; {
 
 /*
  * Length of the datatype, t is the type descriptor.
- * The id of the type is the id of the keyword + 020 for every indirection
+ * The id of the type is the id of the keyword + 020 for every indirection.
  */
-length(t) {
+int length(int t) {
 
 	if (t<0)
 		t += 020;
@@ -117,19 +113,19 @@ length(t) {
 		return(4);
 	switch(t) {
 
-	case 0:
+	case 0:   /* int */
 		return(4);
 
-	case 1:
+	case 1:   /* char */
 		return(1);
 
-	case 2:
+	case 2:   /* float */
 		return(4);
 
-	case 3:
+	case 3:   /* double */
 		return(8);
 
-	case 4:  /* ??? what's this */
+	case 4:  /* ??? */
 		return(4);
 
 	}
@@ -137,27 +133,27 @@ length(t) {
 }
 
 /* rounded length */
-rlength(c) {
-	auto l;
+int rlength(int c) {
+	int l;
 
 	return((l=length(c))==1? 4: l);
 }
 
 
 /* prints the number n in base b */
-printn(n,b) {
-	auto a;
+void printn(int n, int b) {
+	int a;
 
 	if(a=n/b) /* assignment, not test for equality */
 		printn(a, b); /* recursive */
 	putchar(n%b + '0');
 }
 
-putwrd(a) {
+void putwrd(int a) {
     printf("%d;", a);
 }
 
-cc_putchar(int c)
+void cc_putchar(int c)
 {
     putc(c, fout);
 }
@@ -168,7 +164,7 @@ void cc_printf(char *fmt, ...)
 	auto *adx, x, c, *i;
 	va_list arguments;
 
-    va_start ( arguments, fmt);
+    va_start(arguments, fmt);
 loop:
 	while((c = *fmt++) != '%') {
 		if(c == '\0') {
@@ -193,19 +189,19 @@ loop:
 			}
 			putchar('-');
 		}
-		printn(x, c=='o'?8:10);
+		printn(x, c=='o' ? 8 : 10);
 		goto loop;
 
 	case 's': /* string */
 	    x = va_arg(arguments, int);
-	    s=x;
+	    s = x;
 		while(c = *s++) {
             putchar(c);
         }
 		goto loop;
 
 	case 'p':
-		s =va_arg(arguments, int*);
+		s = va_arg(arguments, int*);
 		putchar('_');
 		c = namsiz;
 		while(c--)

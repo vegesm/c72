@@ -13,8 +13,7 @@ int ospace[250];	/* fake */
 /*
  * Adds the string s with id t to the hash table.
  */
-init(s, t)
-char s[]; {
+void init(char *s, int t) {
 	char *sp;
 	int *np, i;
 
@@ -42,8 +41,7 @@ char s[]; {
  * using the Sethi-Ullman algorithm. Additionally, sides of a binary operation can be flipped such that
  * the more difficult subtree comes first. See the C compiler tour in the UNIX manual.
  */
-main(argc, argv)
-char *argv[]; {
+main(int argc, char *argv[]) {
 	if(argc<3) {
 		error("Arg count");
 		exit(1);
@@ -92,7 +90,7 @@ char *argv[]; {
  * Following these 4 words, another 4 words contain the key.
  */
 int *lookup() {
-	auto i, j, *np, *sp, *rp;
+	int i, j, *np, *sp, *rp;
 
 	i = 0;
 	sp = symbuf;
@@ -140,8 +138,8 @@ no:		if ((i += pssiz) >= hshlen) i = 0;
  * If the current symbol is a name, csym will point to the corresponding entry in the hashtable.
  * See csym comments at the bottom for its contents.
  */
-symbol() {
-	auto b, c;
+int symbol() {
+	int b, c;
 	char *sp;
 
 	if (peeksym>=0) {  /* if we have a peeked symbol, return that */
@@ -264,10 +262,10 @@ com1:
 
 /*
  * Peeks at the next char and if it is c then eats it and returns b, otherwise returns a.
- * Useful for two character symbols, e.g. distinguish between ! and =
+ * Useful for two character symbols, e.g. to distinguish between ! and !=
  * call subseq('=', note_equal_code, logical_not_code).
  */
-subseq(c,a,b) {
+int subseq(int c, int a, int b) {
 	if (!peekc)
 		peekc = getchar();
 	if (peekc != c)
@@ -279,8 +277,8 @@ subseq(c,a,b) {
 /*
  * Gets a string. It assumes the opening quotation mark has been already processed.
  */
-getstr() {
-	auto c;
+int getstr() {
+	int c;
 
 	printf(".data;l%d:.byte ", cval=isn++);
 	while((c=mapch('"')) >= 0)
@@ -292,9 +290,9 @@ getstr() {
 /*
  * Reads a character literal. Assumes opening ' has been read already.
  */
-getcc()
+int getcc()
 {
-	auto c, cc;
+	int c, cc;
 	char *cp;
 
 	cval = 0;
@@ -313,9 +311,9 @@ getcc()
  * Processes a character from a string/character literal. c contains the delimiter char.
  * This function handles mapping of escape sequences.
  */
-mapch(c)
+int mapch(int c)
 {
-	auto a;
+	int a;
 
 	if((a=getchar())==c)
 		return(-1);
@@ -365,8 +363,8 @@ mapch(c)
  * Otherwise, the operator and tree node stack is unwinded by building partial subtrees,
  * until the top of the prst is smaller than current operator's precedence.
  */
-tree() {
-	auto *op, opst[20], *pp, prst[20], andflg, o,
+int tree() {
+	int *op, opst[20], *pp, prst[20], andflg, o,
 		p, ps, os;
 
 	space = ospace;
@@ -552,7 +550,7 @@ syntax:
  * Processes a variable declaration, the preceding type/storage keyword has been processed already.
  * kw - the id of the preceding type/storage keyword, 8 for function parameter list.
  */
-void declare(kw) {
+void declare(int kw) {
 	int o;
 
 	while((o=symbol())==20) {		/* name */
@@ -598,45 +596,44 @@ syntax:
 }
 
 /* constants for code generator tables */
-regtab = 0;
-efftab = 1;
-cctab = 2;
-sptab = 3;
+const int regtab = 0;
+const int efftab = 1;
+const int cctab = 2;
+const int sptab = 3;
 
 /* hash table */
-symbuf[2];  /* buffer for the key to look up in has table. 8 byte long, should be 8/sizeof(int); original value was 4 */
-pssiz = 8;  /* size of an entry in the hashtable in words,  should be 4 + nwps */
-namsiz = 8;  /* maximum length of the key in bytes */
-nwps = 2;  /* number of words per symbuf - originally 4 */
-hshused = 0;  /* number of elements in the hash table */
-hshsiz= 100;  /* maximum number of elements in the table */
-hshlen =800;	/* size of the table in word, equals to pssiz*hshsiz */
-hshtab[800];  /* The hash table for symbols. For eahc entry, the first 4 bytes are the data, the next 4 bytes are the key. */
+int symbuf[2];  /* buffer for the key to look up in has table. 8 byte long, should be 8/sizeof(int); original value was 4 */
+const int pssiz = 8;  /* size of an entry in the hashtable in words,  should be 4 + nwps */
+const int namsiz = 8;  /* maximum length of a (variable) name */
+const int nwps = 2;  /* number of words per symbuf - originally 4 */
+int hshused = 0;  /* number of elements in the hash table */
+const int hshsiz = 100;  /* maximum number of elements in the table */
+const int hshlen = 800;	/* size of the table in word, equals to pssiz*hshsiz */
+int hshtab[800];  /* The hash table for symbols. For eahc entry, the first 4 bytes are the data, the next 4 bytes are the key. */
 
 int *space= 0;
 int *cp= 0;  /* top of the cmst stack */
-cmsiz= 40;  /* size of the cmst stack */
-cmst[40];  /* the tree node stack, contains pointers to the nodes*/
-ctyp = 0; /* id of the int type, constant */
-isn = 1;  /* current label number */
-swsiz = 120;
-swtab[120];
+const int cmsiz = 40;  /* size of the cmst stack */
+int cmst[40];  /* the tree node stack, contains pointers to the nodes */
+int ctyp = 0; /* id of the int type, constant */
+int isn = 1;  /* current label number */
+const int swsiz = 120;
+int swtab[120];
 int *swp = 0;
-contlab = 0;  /* label for a continue statement in the current loop */
-brklab = 0;   /* label for a break statement in the current loop */
-deflab = 0;   /* label for a deafult statement in the current switch */
-nreg = 4;  /* number of general registers available */
-maprel[]={ 60,61,64,65,62,63,68,69,66,67};  /* maps binary relations to the their flipped pairs */
-nauto = 0;
-stack = 0;
-peeksym = -1;  /* peeked symbol */
-peekc= 0;  /* peeked character */
-eof = 0;  /* true if reached end of file */
-line = 1;  /* current line */
-int *csym = 0;  /* current symbol see meaning below */
-cval = 0;  // contains the currently read character literal
-ncpw = 4;  /* number of characters per word */
-nerror = 0;  /* number of errors during parsing */
+int contlab = 0;  /* label for a continue statement in the current loop */
+int brklab = 0;   /* label for a break statement in the current loop */
+int deflab = 0;   /* label for the default statement in the current switch */
+const int nreg = 4;  /* number of general registers available */
+int maprel[]={ 60,61,64,65,62,63,68,69,66,67};  /* maps binary relations to the their flipped pairs */
+int stack = 0;
+int peeksym = -1;  /* peeked symbol */
+int peekc = 0;  /* peeked character */
+int eof = 0;  /* true if reached end of file */
+int line = 1;  /* current line */
+int *csym = 0;  /* current symbol, see meaning below */
+int cval = 0;  /* contains the currently read character literal, int literal, label for string literal */
+const int ncpw = 4;  /* number of characters per word */
+int nerror = 0;  /* number of errors during parsing */
 FILE *fout;  /* putchar prints characters to this file */
 int *paraml;  /* head of the parameter list */
 int *parame;  /* last element in the parameter list */
