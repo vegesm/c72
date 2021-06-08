@@ -4,3 +4,4 @@ docs
 *.exe
 cmake*
 src/*_conv.s
+/src/sptab_old.s

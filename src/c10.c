@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	fout = stdout;
-    printf(".include \"C:/projectek/legacy-cc72/src/pdp11_mov.s\"\n");
+    printf(".include \"" __DIR__ "/pdp11_mov.s\"\n");
 
 	tabtab[0] = regtab;
 	tabtab[1] = efftab;

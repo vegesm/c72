@@ -199,7 +199,9 @@ loop:
 
 	case 'p':
 		s =va_arg(arguments, int*);
+		#ifdef WIN32
 		putchar('_');
+        #endif
 		c = namsiz;
 		while(c--)
 			if(*s)

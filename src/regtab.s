@@ -126,8 +126,8 @@ cr32:
 	IB1	A1
 
 %a,n
-	c72_mov	A1,R
-	I'	$4,A1
+	c72_mov	B1,A1,R
+	I'B1	$4,A1
 
 %nb*,n
 	F*

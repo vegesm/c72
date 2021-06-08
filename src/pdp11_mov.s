@@ -65,7 +65,10 @@ __prinst movb, \from, \to
 .endif
 .endm
 
-/* eax contains the value we want to switch on, ebx has the switch table address */
+/*
+Code to look up entries in a switch table.
+%eax contains the value we want to switch on, %ebx has the switch table address
+*/
 1:
 	addl $8, %ebx
 bswitch:
