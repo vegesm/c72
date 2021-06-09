@@ -225,9 +225,9 @@ void error1(char *s, int p1) {
 void error2(char *s, int p1, int p2) {
 	FILE *f;
 	nerror++;
-	fflush(stdout);
+	fflush(fout);
 	f = fout;
-	fout = stdout;
+	fout = stderr;
 	printf("%d: ", line);
 	printf(s, p1, p2);
 	putchar('\n');

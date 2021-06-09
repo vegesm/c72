@@ -7,7 +7,7 @@
 void function(char *name) {
 	printf( ".text; %p:\n", name);
 
-	printf("push   %ebp; mov    %esp, %ebp\n");  /* set up stack frame */
+	printf("push\t%ebp\nmov\t%esp, %ebp\n");  /* set up stack frame */
 	declare(8);  /* read parameter list */
 	declist(); /* type declarations of parameters */
 

@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+BUILD_FOLDER=.
+ASM_PATH="${1%.*}.s"
+
+$BUILD_FOLDER/c0 $1 $1.tmp
+$BUILD_FOLDER/c1 $1.tmp $ASM_PATH
+
+rm $1.tmp
+
+gcc -m32 $ASM_PATH -o $2
+
+

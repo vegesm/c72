@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 {
 	int *sp, c, *table, *tabtab[4], tree;
 
-	if (argc<2) {
+	if (argc<3) {
 		error("Arg count");
 		exit(1);
 	}
@@ -39,7 +39,10 @@ int main(int argc, char *argv[])
 		error1("Can't find %s", argv[1]);
 		exit(1);
 	}
-	fout = stdout;
+	if((fout=fopen(argv[2], "wb"))==NULL) {
+		error1("Can't create %s", argv[2]);
+		exit(1);
+	}
     printf(".include \"" __DIR__ "/pdp11_mov.s\"\n");
 
 	tabtab[0] = regtab;

@@ -8,7 +8,7 @@ mingw32-make c1
 echo Running c0
 ./c0 ../test/$1.c tmp.txt
 echo Running c1
-./c1 tmp.txt > tmp.s
+./c1 tmp.txt tmp.s
 gcc tmp.s -o test.exe
 
 echo
