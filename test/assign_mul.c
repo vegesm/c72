@@ -27,7 +27,7 @@ main() {
     printf("c = %d\n", c);
 
     c = 5; d =3;
-    printf("c * d = %d\n", c =* b);
+    printf("c * d = %d\n", c =* d);
     printf("c = %d\n", c);
 
     carr[0] = 5;

@@ -1,6 +1,5 @@
 main() {
-    int a, b
-    ;
+    int a, b;
     a = 1;
     if(a) {
         printf("test1 - a is nonzero\n");
@@ -22,12 +21,6 @@ main() {
     } else {
         printf("test4 - else called\n");
     }
-
-    a = 0;
-    if(a & printf("and short circuit fail\n"));
-
-    a = 1;
-    if(a | printf("or short circuit fail\n"));
 
     a = 0;
     b = 1;
